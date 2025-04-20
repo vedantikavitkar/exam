@@ -95,3 +95,23 @@ model.fit(X_train, y_train, epochs=5, batch_size=64, validation_data=(X_test, y_
 
 accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {accuracy[1]*100:.2f}%")
+
+
+import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+
+data = np.sin(np.linspace(0, 100, 500))
+X = np.array([data[i:i+10] for i in range(490)])
+y = data[10:]
+
+X = X.reshape((X.shape[0], X.shape[1], 1))
+
+model = Sequential([
+    LSTM(20, input_shape=(10, 1)),
+    Dense(1)
+])
+model.compile(optimizer='adam', loss='mse')
+model.fit(X, y, epochs=5, verbose=0)
+
+print("Next:", model.predict(X[-1:].reshape(1, 10, 1))[0][0])
